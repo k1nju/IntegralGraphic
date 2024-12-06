@@ -1,0 +1,7 @@
+C:\Users\Academy\source\repos\IntegralGraphic\IntegralGraphic\bin\Debug\IntegralGraphic.exe.config
+C:\Users\Academy\source\repos\IntegralGraphic\IntegralGraphic\bin\Debug\IntegralGraphic.exe
+C:\Users\Academy\source\repos\IntegralGraphic\IntegralGraphic\bin\Debug\IntegralGraphic.pdb
+C:\Users\Academy\source\repos\IntegralGraphic\IntegralGraphic\obj\Debug\IntegralGraphic.csproj.AssemblyReference.cache
+C:\Users\Academy\source\repos\IntegralGraphic\IntegralGraphic\obj\Debug\IntegralGraphic.csproj.CoreCompileInputs.cache
+C:\Users\Academy\source\repos\IntegralGraphic\IntegralGraphic\obj\Debug\IntegralGraphic.exe
+C:\Users\Academy\source\repos\IntegralGraphic\IntegralGraphic\obj\Debug\IntegralGraphic.pdb
