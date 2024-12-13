@@ -5,3 +5,10 @@ C:\Users\Academy\source\repos\IntegralGraphic\IntegralGraphic\obj\Debug\Integral
 C:\Users\Academy\source\repos\IntegralGraphic\IntegralGraphic\obj\Debug\IntegralGraphic.csproj.CoreCompileInputs.cache
 C:\Users\Academy\source\repos\IntegralGraphic\IntegralGraphic\obj\Debug\IntegralGraphic.exe
 C:\Users\Academy\source\repos\IntegralGraphic\IntegralGraphic\obj\Debug\IntegralGraphic.pdb
+C:\Users\artyo\OneDrive\Документы\GitHub\IntegralGraphic\IntegralGraphic\IntegralGraphic\bin\Debug\IntegralGraphic.exe.config
+C:\Users\artyo\OneDrive\Документы\GitHub\IntegralGraphic\IntegralGraphic\IntegralGraphic\bin\Debug\IntegralGraphic.exe
+C:\Users\artyo\OneDrive\Документы\GitHub\IntegralGraphic\IntegralGraphic\IntegralGraphic\bin\Debug\IntegralGraphic.pdb
+C:\Users\artyo\OneDrive\Документы\GitHub\IntegralGraphic\IntegralGraphic\IntegralGraphic\obj\Debug\IntegralGraphic.csproj.AssemblyReference.cache
+C:\Users\artyo\OneDrive\Документы\GitHub\IntegralGraphic\IntegralGraphic\IntegralGraphic\obj\Debug\IntegralGraphic.csproj.CoreCompileInputs.cache
+C:\Users\artyo\OneDrive\Документы\GitHub\IntegralGraphic\IntegralGraphic\IntegralGraphic\obj\Debug\IntegralGraphic.exe
+C:\Users\artyo\OneDrive\Документы\GitHub\IntegralGraphic\IntegralGraphic\IntegralGraphic\obj\Debug\IntegralGraphic.pdb
