@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace IntegralGraphic
@@ -13,39 +14,46 @@ namespace IntegralGraphic
             return x * x;
         }
 
-        static double RectangleMethod(Func<double, double> func, double a, double b)
+        static int processorCount = Environment.ProcessorCount;
+
+        static double RectangleMethod(Func<double, double> func, double a, double b, double tolerance)
         {
-            int n = 1000;
+            double previousArea = double.NaN; // начальное значение как недействительное
+            double currentArea = 0;
+            int n = 1;
+
+            do
+            {
+                currentArea = CalculateArea(func, a, b, n);
+                if (previousArea != double.NaN && Math.Abs(currentArea - previousArea) < tolerance)
+                {
+                    break; // прекращаем, если ошибка меньше допустимого
+                }
+
+                previousArea = currentArea;
+                n *= 2; // увеличиваем количество разбиений
+            } while (true);
+
+            return currentArea;
+        }
+
+        private static double CalculateArea(Func<double, double> func, double a, double b, int n)
+        {
             double width = (b - a) / n;
-            double sum = 0.0;
+            double area = 0;
 
             for (int i = 0; i < n; i++)
             {
                 double x = a + i * width;
-                sum += func(x) * width;
+                area += func(x) * width; // суммируем площади
             }
 
-            return sum;
+            return area;
         }
 
-        static double RectangleMethodParallel(Func<double, double> func, double a, double b, int n = 1000)
-        {
-            double width = (b - a) / n;
-            double sum = 0.0;
-            double[] results = new double[n];
-
-            // Параллельный цикл для вычисления суммы
-            Parallel.For(0, n, i =>
-            {
-                double x = a + i * width;
-                results[i] = func(x) * width;
-            });
-
-            // Суммируем результаты
-            sum = results.Sum();
-
-            return sum;
-        }
+        double a = 0;
+        double b = 10;
+        static double tolerance = 0.000001;
 
         static double IntegrateWithSegments(double a, double b, int segments)
         {
@@ -53,35 +61,71 @@ namespace IntegralGraphic
             double areaSum = 0;
             for (int i = 0; i  < segments; i++)
             {
-                areaSum += RectangleMethod(Function, i * segmentSize, i * segmentSize + segmentSize);
+                areaSum += RectangleMethod(Function, i * segmentSize, i * segmentSize + segmentSize, tolerance);
             }
             return areaSum;
         }
-
-        static double IntegrateWithSegmentsParallel(double a, double b, int segments)
+        static double RectangleMethodParallel(double a, double b, int segments)
         {
             double segmentSize = (b - a) / segments;
-            double[] areas = new double[segments];
+            double sum = 0.0;
+            object locker = new object();
 
             Parallel.For(0, segments, i =>
             {
-                areas[i] = RectangleMethod(Function, a + i * segmentSize, a + (i + 1) * segmentSize);
+                double tempSum = RectangleMethod(Function, a + i * segmentSize, a + (i + 1) * segmentSize, tolerance);
+
+                lock (locker)
+                {
+                    sum += tempSum;
+                }
             });
 
-            return areas.Sum();
+            return sum;
+        }
+
+        static double IntegrateThreads(double a, double b, int segments)
+        {
+            double segmentSize = (b - a) / segments;
+            double areaSum = 0;
+            object locker = new object();
+            Thread[] threads = new Thread[segments];
+
+            void IntegrateSegment(int index)
+            {
+                double tempSum = RectangleMethod(Function, a + index * segmentSize, a + (index + 1) * segmentSize, tolerance);
+                lock (locker)
+                {
+                    areaSum += tempSum;
+                }
+            }
+
+            for (int i = 0; i < segments; i++)
+            {
+                int tempIndex = i; // захватываем текущее значение индекса
+                threads[i] = new Thread(() => IntegrateSegment(tempIndex));
+                threads[i].Start();
+            }
+
+            foreach (Thread thread in threads)
+            {
+                thread.Join(); // ожидаем завершения всех потоков
+            }
+
+            return areaSum;
         }
 
         static void Main(string[] args)
         {
-            double a = 0.0;
-            double b = 1.0;
-            int n = 1000;
+            double a = 0;
+            double b = 10;
+            double tolerance = 0.000001;
 
-            double result = RectangleMethod(Function, a, b);
+            double result = RectangleMethod(Function, a, b, tolerance);
             Console.WriteLine($"Приближённое значение интеграла от {a} до {b}: {result}");
-            Console.WriteLine($"Приближённое значение интеграла от {a} до {b} (параллельно): {RectangleMethodParallel(Function, a, b, n)}");
-            Console.WriteLine($"Приближённое значение интеграла от {a} до {b}: {IntegrateWithSegments(a, b, 4)}");
-            Console.WriteLine($"Приближённое значение интеграла от {a} до {b} (параллельно): {IntegrateWithSegmentsParallel(a, b, 4)}");
+            Console.WriteLine($"Значение интеграла с сегментами: {IntegrateWithSegments(a, b, 4)}");
+            Console.WriteLine($"Значение интеграла с сегментами (Thread): {IntegrateThreads(a, b, processorCount)}");
+            Console.WriteLine($"Значение интеграла с сегментами (Task): {RectangleMethodParallel(a, b, processorCount)}");
             Console.ReadKey();
         }
     }
